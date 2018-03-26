@@ -199,7 +199,6 @@ engine.listen({
 });
 ```
 
-
 #### Hapi
 
 This is a little more complex but also built right in! Hapi doesn't have a `listen` method, so you have to provide a special object to the `hapi.Server` constructor, and turn off auto-listening mode. Note that this assumes you are running the `engine.hapiListener` method inside an async function, as setting up Hapi servers generally requires calling `await` on a few async methods.
@@ -229,6 +228,27 @@ If you want to pass options to the Engine listener, you can pass them as the sec
 
 ```js
 engine.meteorListen(WebApp, { graphqlPaths: [ "/other-graphql" ]});
+```
+
+#### Nest
+
+Nest's listen function does two things, unlike Express/Connect/etc's which does one thing, so to decouple them you have to do this:
+
+```js
+// replace this
+// await app.listen(PORT, () => {
+//   console.log(`Listening on port ${PORT}`);
+// });
+await app.init();
+await engine.listen(
+  {
+    port: PORT,
+    httpServer: app.getHttpServer(),
+  },
+  () => {
+    console.log(`Listening on port ${PORT}`);
+  }
+);
 ```
 
 #### Other Frameworks (and Node's built-in `http.Server`)
