@@ -236,20 +236,12 @@ engine.meteorListen(WebApp, { graphqlPaths: [ "/other-graphql" ]});
 Nest's listen function does two things, unlike Express/Connect/etc's which does one thing, so in order to decouple them you have to do this:
 
 ```js
-// remove this
-// await app.listen(PORT, () => {
-//   console.log(`Listening on port ${PORT}`);
-// });
+// Replace your app.listen with engine.listen after awaiting app.init()
 await app.init();
-await engine.listen(
-  {
-    port: PORT,
-    httpServer: app.getHttpServer(),
-  },
-  () => {
-    console.log(`Listening on port ${PORT}`);
-  }
-);
+await engine.listen({
+  port: PORT,
+  httpServer: app.getHttpServer(),
+});
 ```
 
 #### Other Frameworks (and Node's built-in `http.Server`)
